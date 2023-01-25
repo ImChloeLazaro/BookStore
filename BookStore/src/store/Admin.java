@@ -115,40 +115,15 @@ public class Admin {
 	}
 	
 	public void transaction() {
-		try {
-			ResultSet result = Database.ViewTransaction().getResultSet();
 			System.out.printf("----------------------------------------------------------------------------------------------------%n");
 			System.out.printf("-                                            Transactions                                          -%n");
 			System.out.printf("----------------------------------------------------------------------------------------------------%n");
 			System.out.printf("| %-25s | %-25s | %-10s | %-10s | %-15s|%n", "Customer", "Book", "Quantity", "Price", "Purchase Date");
 			System.out.printf("----------------------------------------------------------------------------------------------------%n");
-			while(result.next()) {
-				System.out.printf("| %-25s | %-25s | %-10s | %-10s | %-15s|%n",Database.ShowUser( result.getInt("customer")), Database.ShowBookName(result.getInt("book")), result.getString("quantity"), result.getString("total"), result.getString("date"));
-			}
+			Database.Transaction();
 			System.out.printf("----------------------------------------------------------------------------------------------------%n");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
-	public static void TransactionbyUser(int id) {
-		try {
-			ResultSet result = Database.ViewTransactionbyID(id).getResultSet();
-			
-			System.out.printf("----------------------------------------------------------------------------------------------------%n");
-			System.out.printf("-                                            Transactions                                          -%n");
-			System.out.printf("----------------------------------------------------------------------------------------------------%n");
-			System.out.printf("| %-25s | %-25s | %-10s | %-10s | %-15s|%n", "Customer", "Book", "Quantity", "Price", "Purchase Date");
-			System.out.printf("----------------------------------------------------------------------------------------------------%n");
-			while(result.next()) {
-				System.out.printf("| %-25s | %-25s | %-10s | %-10s | %-15s|%n",Database.ShowUser( result.getInt("customer")), Database.ShowBookCategory(result.getInt("book")), result.getString("quantity"), result.getString("total"), result.getString("date"));
-			}
-			System.out.printf("----------------------------------------------------------------------------------------------------%n");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 	public static void categories() {
 		System.out.println("SELECT CATEGORIES:");
 		System.out.println("1. Thriller");

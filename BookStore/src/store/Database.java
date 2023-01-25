@@ -98,14 +98,22 @@ public class Database {
 			return stmt;
 	}
 	
-	public static String ShowBookName(int id) throws SQLException {
+	public static String ShowBookName(int id) {
 		
-			stmt = connection.prepareStatement("SELECT title FROM `books` WHERE id = ?");
-			stmt.setInt(1, id);
-			stmt.execute();
-			ResultSet book = stmt.getResultSet();
-			
-			return book.getString("title");
+			String book = "";
+			try {
+				stmt = connection.prepareStatement("SELECT title FROM `books` WHERE id = ?");
+				stmt.setInt(1, id);
+				stmt.execute();
+				ResultSet users = stmt.getResultSet();
+				if(users.next()) {
+					book = users.getString("title");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return book;
 	}
 	
 	public static int ShowBookPrice(int id) throws SQLException {
@@ -183,30 +191,38 @@ public class Database {
 		}
 	}
 	
-	public static PreparedStatement ViewTransaction(){
+	public static void Transaction() {
 		try {
 			stmt = connection.prepareStatement("SELECT * FROM order_details");
 			stmt.execute();
+			ResultSet result = stmt.getResultSet();
+			
+			
+			 while(result.next()) {
+				System.out.printf("| %-25s | %-25s | %-10s | %-10s | %-15s|%n", ShowUser(result.getInt("customer")), ShowBookName(result.getInt("book")), result.getString("quantity"), result.getString("total"), result.getString("date"));
+			}
+			 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return stmt;
-	}
-	
-	public static PreparedStatement ViewTransactionbyID(int id) throws SQLException {
-		
+}
+	public static void UserTransaction() {
 		try {
-			stmt = connection.prepareStatement("SELECT * FROM order_details WHERE customer = ?");
-			stmt.setInt(1, id);
+			stmt = connection.prepareStatement("SELECT * FROM order_details ");
 			stmt.execute();
+			ResultSet result = stmt.getResultSet();
+			
+			
+			 while(result.next()) {
+				System.out.printf("| %-25s | %-25s | %-10s | %-10s | %-15s|%n", ShowUser(result.getInt("customer")), ShowBookName(result.getInt("book")), result.getString("quantity"), result.getString("total"), result.getString("date"));
+			}
+			 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return stmt;
 	}
-	
 	//	User Related Transactions.
 	
 	public static String ShowUser(int id) {
@@ -217,7 +233,7 @@ public class Database {
 			stmt.setInt(1, id);
 			stmt.execute();
 			ResultSet users = stmt.getResultSet();
-			while(users.next()) {
+			if(users.next()) {
 				user = users.getString("name");
 			}
 		} catch (SQLException e) {
@@ -225,19 +241,6 @@ public class Database {
 			e.printStackTrace();
 		}
 		return user;
-	}
-	
-	public static int ShowUserbyEmail(String Email) throws SQLException {
-		stmt = connection.prepareStatement("SELECT id FROM `users` WHERE email = ?");
-		stmt.setString(1, Email);
-		stmt.execute();
-		ResultSet user = stmt.getResultSet();
-		if(!user.next()) {
-			System.err.println("No ID Found!");
-			return 0;
-		}
-		
-		return user.getInt("id");
 	}
 	
 	public static void buy(int user, int book, int quantity, int total) {
@@ -252,6 +255,41 @@ public class Database {
 			System.out.println("New Order Added!");
 		} catch (SQLException e) {
 			System.err.println("Order Error!" + e);
+		}
+	}
+	
+	public static int user(String email) {
+		int id = 0;
+		try {
+			stmt = connection.prepareStatement("SELECT id FROM users WHERE email = ?");
+			stmt.setString(1, email);
+			stmt.execute();
+			ResultSet users = stmt.getResultSet();
+			if(users.next()) {
+				id = users.getInt("id");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return id;
+	}
+	
+	public static void CustomerTransaction(int id) {
+		try {
+			stmt = connection.prepareStatement("SELECT * FROM order_details WHERE customer = ?");
+			stmt.setInt(1, id);
+			stmt.execute();
+			ResultSet result = stmt.getResultSet();
+			
+			
+			 while(result.next()) {
+				System.out.printf("| %-25s | %-25s | %-10s | %-10s | %-15s|%n", ShowUser(result.getInt("customer")), ShowBookName(result.getInt("book")), result.getString("quantity"), result.getString("total"), result.getString("date"));
+			}
+			 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
