@@ -22,7 +22,6 @@ public class Customer{
 			
 			switch(Input.InputInteger("CHOOSE:")) {
 			case 1:
-				System.out.println(user.getEmail());
 				Admin.show();
 				buy();
 				break;
@@ -30,7 +29,7 @@ public class Customer{
 				Admin.show();
 				break;
 			case 3:
-				Admin.TransactionbyUser(11);
+				transaction();
 				break;
 			case 4:
 				System.out.println("BYE!");
@@ -105,18 +104,27 @@ public class Customer{
 	}
 	
 	public void buy() {
-		
 		try {
 			
 			int id = Input.InputInteger("ENTER BID OF BOOK YOU WANT TO BUY?");
 			int quantity = Input.InputInteger("Quantity:");
 			int total = Database.ShowBookPrice(id) * quantity;
 			
-			Database.buy(Database.ShowUserbyEmail(user.getEmail()), id, quantity, total);
+			Database.buy(Database.user(user.getEmail()), id, quantity, total);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void transaction() {
+		System.out.printf("----------------------------------------------------------------------------------------------------%n");
+		System.out.printf("-                                            Transactions                                          -%n");
+		System.out.printf("----------------------------------------------------------------------------------------------------%n");
+		System.out.printf("| %-25s | %-25s | %-10s | %-10s | %-15s|%n", "Customer", "Book", "Quantity", "Price", "Purchase Date");
+		System.out.printf("----------------------------------------------------------------------------------------------------%n");
+		Database.CustomerTransaction(Database.user(user.getEmail()));
+		System.out.printf("----------------------------------------------------------------------------------------------------%n");
 	}
 }
